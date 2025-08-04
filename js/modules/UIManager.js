@@ -1,6 +1,7 @@
 import { MenuManager } from './MenuManager.js';
 import { IconSelector } from './IconSelector.js';
 import { TextFormatBar } from './TextFormatBar.js';
+import { ContextMenu } from './ContextMenu.js';
 
 export class UIManager {
     constructor(pageManager, trashManager) {
@@ -9,6 +10,7 @@ export class UIManager {
         this.menuManager = new MenuManager();
         this.iconSelector = new IconSelector();
         this.textFormatBar = new TextFormatBar();
+        this.contextMenu = new ContextMenu();
         
 
         
@@ -25,8 +27,8 @@ export class UIManager {
             this.editPageTitle();
         });
 
-        document.getElementById('deletePageBtn').addEventListener('click', () => {
-            this.deleteCurrentPage();
+        document.getElementById('favoritePageBtn').addEventListener('click', () => {
+            this.toggleCurrentPageFavorite();
         });
 
         // Editor
@@ -115,9 +117,12 @@ export class UIManager {
                 <span class="icon-edit-indicator">✏️</span>
             </div>
             <span class="page-title">${page.title}</span>
-            <button class="page-menu-btn" data-page-id="${page.id}">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
+            <div class="page-actions-container">
+                ${page.isFavorite ? '<span class="favorite-indicator"><i class="fas fa-star"></i></span>' : ''}
+                <button class="page-menu-btn" data-page-id="${page.id}">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
         `;
 
         // Event listeners
@@ -199,8 +204,7 @@ export class UIManager {
         document.getElementById('currentPageTitle').textContent = page.title;
         document.getElementById('editor').innerHTML = page.content;
         
-        const deleteBtn = document.getElementById('deletePageBtn');
-        deleteBtn.style.display = this.pageManager.hasMultiplePages() ? 'flex' : 'none';
+        this.updateFavoriteButton(page);
 
         this.renderPages();
         this.renderTrash();
@@ -218,29 +222,15 @@ export class UIManager {
         this.renderPages();
         this.switchToPage(newPage.id);
         
+        // Inicializar botão de favorito
+        this.updateFavoriteButton(newPage);
+        
         setTimeout(() => {
             this.editPageTitleAndIcon();
         }, 100);
     }
 
-    deleteCurrentPage() {
-        if (!this.pageManager.currentPageId || !this.pageManager.hasMultiplePages()) return;
 
-        if (!confirm('Tem certeza que deseja excluir esta página? Esta ação não pode ser desfeita.')) {
-            return;
-        }
-
-        const currentIndex = this.pageManager.pages.findIndex(p => p.id === this.pageManager.currentPageId);
-        this.pageManager.deletePage(this.pageManager.currentPageId);
-
-        if (this.pageManager.pages.length > 0) {
-            const nextPage = this.pageManager.getNextPageAfterDeletion(currentIndex);
-            this.switchToPage(nextPage.id);
-        } else {
-            this.pageManager.createInitialPage();
-            this.switchToPage(this.pageManager.pages[0].id);
-        }
-    }
 
     moveToTrash(pageId) {
         if (!this.pageManager.hasMultiplePages()) {
@@ -506,6 +496,27 @@ export class UIManager {
         };
     }
 
+    updateFavoriteButton(page) {
+        const favoriteBtn = document.getElementById('favoritePageBtn');
+        if (page.isFavorite) {
+            favoriteBtn.classList.add('active');
+            favoriteBtn.innerHTML = '<i class="fas fa-star"></i>';
+        } else {
+            favoriteBtn.classList.remove('active');
+            favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
+        }
+    }
+
+    toggleCurrentPageFavorite() {
+        if (!this.pageManager.currentPageId) return;
+
+        const isFavorite = this.pageManager.toggleFavorite(this.pageManager.currentPageId);
+        const page = this.pageManager.getPage(this.pageManager.currentPageId);
+        
+        this.updateFavoriteButton(page);
+        this.renderPages();
+    }
+
     handleTextSelection() {
         const selection = window.getSelection();
         
@@ -517,6 +528,8 @@ export class UIManager {
             const container = range.commonAncestorContainer;
             
             if (editor.contains(container)) {
+                // Esconder menu de contexto quando há seleção
+                this.contextMenu.hide();
                 // Aguardar um pouco para garantir que a seleção foi finalizada
                 setTimeout(() => {
                     this.textFormatBar.positionNearSelection();

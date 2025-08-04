@@ -6,6 +6,9 @@ export class MenuManager {
     showPageMenu(pageId, button, uiManager) {
         this.closeActiveMenu();
 
+        const page = uiManager.pageManager.getPage(pageId);
+        const isFavorite = page ? page.isFavorite : false;
+
         const menu = document.createElement('div');
         menu.className = 'page-menu';
         menu.innerHTML = `
@@ -16,6 +19,10 @@ export class MenuManager {
             <div class="menu-item" data-action="duplicate">
                 <i class="fas fa-copy"></i>
                 <span>Duplicar</span>
+            </div>
+            <div class="menu-item" data-action="toggleFavorite">
+                <i class="fas fa-star"></i>
+                <span>${isFavorite ? 'Desfavoritar' : 'Favoritar'}</span>
             </div>
             <div class="menu-item" data-action="moveToTrash">
                 <i class="fas fa-trash"></i>
@@ -127,6 +134,15 @@ export class MenuManager {
                 if (duplicatedPage) {
                     uiManager.renderPages();
                     uiManager.switchToPage(duplicatedPage.id);
+                }
+                break;
+            case 'toggleFavorite':
+                uiManager.pageManager.toggleFavorite(pageId);
+                uiManager.renderPages();
+                // Atualizar botão de favorito se for a página atual
+                if (uiManager.pageManager.currentPageId === pageId) {
+                    const page = uiManager.pageManager.getPage(pageId);
+                    uiManager.updateFavoriteButton(page);
                 }
                 break;
             case 'moveToTrash':

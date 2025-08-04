@@ -22,8 +22,9 @@ export class PageManager {
         const initialPage = {
             id: this.generateId(),
             title: 'Minha Primeira Página',
-            content: '<p>Bem-vindo ao Ordna! Esta é sua primeira página.</p><p>Você pode:</p><ul><li>Criar novas páginas clicando em "Nova Página"</li><li>Editar o título da página clicando no ícone de edição</li><li>Escrever e formatar seu conteúdo</li><li>Navegar entre as páginas na barra lateral</li></ul>',
+            content: '<p>Bem-vindo ao Ordna! Esta é sua primeira página.</p><p>Você pode:</p><ul><li>Criar novas páginas clicando em "Nova Página"</li><li>Editar o título da página clicando no ícone de edição</li><li>Escrever e formatar seu conteúdo</li><li>Navegar entre as páginas na barra lateral</li><li>Favoritar páginas importantes clicando na estrela</li></ul>',
             icon: '📄',
+            isFavorite: false,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
@@ -39,6 +40,7 @@ export class PageManager {
             title: 'Página sem título',
             content: '<p>Comece a escrever sua nova página...</p>',
             icon: '📄',
+            isFavorite: false,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
@@ -87,6 +89,17 @@ export class PageManager {
         }
     }
 
+    toggleFavorite(pageId) {
+        const page = this.getPage(pageId);
+        if (page) {
+            page.isFavorite = !page.isFavorite;
+            page.updatedAt = new Date().toISOString();
+            this.savePages();
+            return page.isFavorite;
+        }
+        return false;
+    }
+
     deletePage(pageId) {
         const pageIndex = this.pages.findIndex(p => p.id === pageId);
         if (pageIndex !== -1) {
@@ -106,6 +119,7 @@ export class PageManager {
             title: `${originalPage.title} (cópia)`,
             content: originalPage.content,
             icon: originalPage.icon,
+            isFavorite: false, // Cópias não são favoritas por padrão
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
@@ -116,9 +130,16 @@ export class PageManager {
     }
 
     getFilteredPages() {
-        return this.pages.filter(page => 
+        const filteredPages = this.pages.filter(page => 
             page.title.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
+        
+        // Ordenar: favoritos primeiro, depois por data de atualização
+        return filteredPages.sort((a, b) => {
+            if (a.isFavorite && !b.isFavorite) return -1;
+            if (!a.isFavorite && b.isFavorite) return 1;
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+        });
     }
 
     setSearchTerm(term) {
