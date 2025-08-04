@@ -22,33 +22,25 @@ export class ContextMenu {
                     <span>Diminuir Indentação</span>
                 </div>
             </div>
-            <div class="context-menu-section">
-                <div class="context-menu-title">Títulos</div>
-                <div class="context-menu-item" data-action="h1">
-                    <i class="fas fa-heading"></i>
-                    <span>Título 1</span>
-                </div>
-                <div class="context-menu-item" data-action="h2">
-                    <i class="fas fa-heading"></i>
-                    <span>Título 2</span>
-                </div>
-                <div class="context-menu-item" data-action="h3">
-                    <i class="fas fa-heading"></i>
-                    <span>Título 3</span>
-                </div>
-                <div class="context-menu-item" data-action="h4">
-                    <i class="fas fa-heading"></i>
-                    <span>Título 4</span>
-                </div>
-                <div class="context-menu-item" data-action="h5">
-                    <i class="fas fa-heading"></i>
-                    <span>Título 5</span>
-                </div>
-                <div class="context-menu-item" data-action="h6">
-                    <i class="fas fa-heading"></i>
-                    <span>Título 6</span>
-                </div>
-            </div>
+                         <div class="context-menu-section">
+                 <div class="context-menu-title">Títulos</div>
+                 <div class="context-menu-item" data-action="h1">
+                     <i class="fas fa-heading"></i>
+                     <span>Título 1</span>
+                 </div>
+                 <div class="context-menu-item" data-action="h2">
+                     <i class="fas fa-heading"></i>
+                     <span>Título 2</span>
+                 </div>
+                 <div class="context-menu-item" data-action="h3">
+                     <i class="fas fa-heading"></i>
+                     <span>Título 3</span>
+                 </div>
+                 <div class="context-menu-item" data-action="h4">
+                     <i class="fas fa-heading"></i>
+                     <span>Título 4</span>
+                 </div>
+             </div>
             <div class="context-menu-section">
                 <div class="context-menu-title">Texto</div>
                 <div class="context-menu-item" data-action="paragraph">
@@ -236,28 +228,26 @@ export class ContextMenu {
 
         console.log('Aplicando ação:', action, 'para elemento:', this.currentLine);
 
-        switch (action) {
-            case 'indent':
-                this.applyIndentation('increase');
-                break;
-            case 'outdent':
-                this.applyIndentation('decrease');
-                break;
-            case 'h1':
-            case 'h2':
-            case 'h3':
-            case 'h4':
-            case 'h5':
-            case 'h6':
-                this.applyHeading(action);
-                break;
-            case 'paragraph':
-                this.applyParagraph();
-                break;
-            case 'list':
-                this.applyList();
-                break;
-        }
+                 switch (action) {
+             case 'indent':
+                 this.applyIndentation('increase');
+                 break;
+             case 'outdent':
+                 this.applyIndentation('decrease');
+                 break;
+             case 'h1':
+             case 'h2':
+             case 'h3':
+             case 'h4':
+                 this.applyHeading(action);
+                 break;
+             case 'paragraph':
+                 this.applyParagraph();
+                 break;
+             case 'list':
+                 this.applyList();
+                 break;
+         }
     }
 
     applyIndentation(type) {
