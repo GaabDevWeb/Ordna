@@ -1,5 +1,6 @@
 import { MenuManager } from './MenuManager.js';
 import { IconSelector } from './IconSelector.js';
+import { TextFormatBar } from './TextFormatBar.js';
 
 export class UIManager {
     constructor(pageManager, trashManager) {
@@ -7,6 +8,9 @@ export class UIManager {
         this.trashManager = trashManager;
         this.menuManager = new MenuManager();
         this.iconSelector = new IconSelector();
+        this.textFormatBar = new TextFormatBar();
+        
+
         
         this.setupIconSelectorCallbacks();
     }
@@ -30,6 +34,32 @@ export class UIManager {
         editor.addEventListener('input', () => {
             this.saveCurrentPageContent();
         });
+
+        // Event listeners para formatação de texto
+        editor.addEventListener('mouseup', () => {
+            setTimeout(() => this.handleTextSelection(), 50);
+        });
+
+        editor.addEventListener('keyup', (e) => {
+            // Verificar se há seleção após teclas de navegação
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                setTimeout(() => this.handleTextSelection(), 0);
+            }
+        });
+
+        // Detectar mudanças na seleção
+        document.addEventListener('selectionchange', () => {
+            setTimeout(() => this.handleTextSelection(), 10);
+        });
+
+        // Esconder barra de formatação ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.text-format-bar') && !e.target.closest('#editor')) {
+                this.textFormatBar.hide();
+            }
+        });
+
+
 
         // Pesquisa
         document.getElementById('searchPages').addEventListener('input', (e) => {
@@ -474,5 +504,28 @@ export class UIManager {
             this.pageManager.updatePageIcon(pageId, icon);
             this.renderPages();
         };
+    }
+
+    handleTextSelection() {
+        const selection = window.getSelection();
+        
+        // Verificar se há seleção de texto
+        if (selection.toString().trim().length > 0 && selection.rangeCount > 0) {
+            // Verificar se a seleção está dentro do editor
+            const editor = document.getElementById('editor');
+            const range = selection.getRangeAt(0);
+            const container = range.commonAncestorContainer;
+            
+            if (editor.contains(container)) {
+                // Aguardar um pouco para garantir que a seleção foi finalizada
+                setTimeout(() => {
+                    this.textFormatBar.positionNearSelection();
+                }, 10);
+            } else {
+                this.textFormatBar.hide();
+            }
+        } else {
+            this.textFormatBar.hide();
+        }
     }
 } 
