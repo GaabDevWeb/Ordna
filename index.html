@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordna</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head> 
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">
+                    <i class="fas fa-book-open"></i>
+                    Ordna
+                </h1>
+                <button class="new-page-btn" id="newPageBtn"> 
+                    <i class="fas fa-plus"></i>
+                    Nova Página
+                </button>
+                <div class="search-container">
+                    <input type="text" id="searchPages" placeholder="Pesquisar páginas..." class="search-input">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+            
+            <div class="pages-list" id="pagesList">
+                <!-- Páginas serão adicionadas aqui dinamicamente -->
+            </div>
+            
+            <!-- Seção da Lixeira -->
+            <div class="trash-section">
+                <div class="trash-header" id="trashHeader">
+                    <h3>
+                        <i class="fas fa-trash"></i>
+                        Lixeira
+                        <span class="trash-count" id="trashCount" style="display: none;">(0)</span>
+                    </h3>
+                    <button class="empty-trash-btn" id="emptyTrashBtn" style="display: none;">
+                        <i class="fas fa-broom"></i>
+                        Esvaziar
+                    </button>
+                </div>
+                <div class="trash-list" id="trashList" style="display: none;">
+                    <!-- Itens da lixeira serão adicionados aqui dinamicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="page-title-container">
+                    <h2 id="currentPageTitle">Bem-vindo ao Ordna</h2>
+                    <button class="edit-title-btn" id="editTitleBtn">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div class="page-actions">
+                    <button class="delete-page-btn" id="deletePageBtn" style="display: none;">
+                        <i class="fas fa-trash"></i>
+                        Excluir Página
+                    </button>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div class="editor-container">
+                    <div class="editor" id="editor" contenteditable="true">
+                        <p>Comece a escrever sua primeira página...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="script.js"></script>
+</body>
+</html> 
