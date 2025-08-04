@@ -12,6 +12,7 @@ class OrdnaApp {
         this.loadPages();
         this.setupEventListeners();
         this.renderPages();
+        this.renderTrash();
         
         if (this.pages.length === 0) {
             this.createInitialPage();
@@ -374,11 +375,38 @@ class OrdnaApp {
             </div>
         `;
 
-        // Posicionar o menu
+        // Posicionar o menu com verificação de limites da tela
         const buttonRect = button.getBoundingClientRect();
+        const menuWidth = 150; // Largura aproximada do menu
+        const menuHeight = 120; // Altura aproximada do menu (3 itens)
+        
+        // Calcular posição inicial
+        let left = buttonRect.left - menuWidth;
+        let top = buttonRect.bottom + 5;
+        
+        // Verificar se o menu sairia da tela pela esquerda
+        if (left < 10) {
+            left = buttonRect.right + 5;
+        }
+        
+        // Verificar se o menu sairia da tela pela direita
+        if (left + menuWidth > window.innerWidth - 10) {
+            left = window.innerWidth - menuWidth - 10;
+        }
+        
+        // Verificar se o menu sairia da tela por baixo
+        if (top + menuHeight > window.innerHeight - 10) {
+            top = buttonRect.top - menuHeight - 5;
+        }
+        
+        // Verificar se o menu sairia da tela por cima
+        if (top < 10) {
+            top = 10;
+        }
+        
         menu.style.position = 'fixed';
-        menu.style.top = `${buttonRect.bottom + 5}px`;
-        menu.style.left = `${buttonRect.left - 150}px`;
+        menu.style.top = `${top}px`;
+        menu.style.left = `${left}px`;
         menu.style.zIndex = '1000';
 
         // Event listeners para as opções do menu
@@ -862,12 +890,16 @@ class OrdnaApp {
         if (this.trash.length === 0) {
             emptyTrashBtn.style.display = 'none';
             trashCount.style.display = 'none';
+            trashList.style.display = 'none';
             return;
         }
         
         emptyTrashBtn.style.display = 'flex';
         trashCount.style.display = 'inline';
         trashCount.textContent = `(${this.trash.length})`;
+        trashList.style.display = 'block';
+
+        console.log('Renderizando lixeira com', this.trash.length, 'itens');
 
         this.trash.forEach(item => {
             const trashItem = document.createElement('div');
@@ -884,10 +916,13 @@ class OrdnaApp {
 
             // Event listener para o menu de opções
             const menuBtn = trashItem.querySelector('.page-menu-btn');
-            menuBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.showTrashItemMenu(item.id, menuBtn);
-            });
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    console.log('Menu da lixeira clicado para item:', item.id);
+                    this.showTrashItemMenu(item.id, menuBtn);
+                });
+            }
 
             trashList.appendChild(trashItem);
         });
@@ -907,6 +942,8 @@ class OrdnaApp {
     }
 
     showTrashItemMenu(itemId, button) {
+        console.log('Mostrando menu da lixeira para item:', itemId);
+        
         // Remover menus existentes
         const existingMenus = document.querySelectorAll('.page-menu');
         existingMenus.forEach(menu => menu.remove());
@@ -924,11 +961,38 @@ class OrdnaApp {
             </div>
         `;
 
-        // Posicionar o menu
+        // Posicionar o menu com verificação de limites da tela
         const buttonRect = button.getBoundingClientRect();
+        const menuWidth = 150; // Largura aproximada do menu
+        const menuHeight = 80; // Altura aproximada do menu
+        
+        // Calcular posição inicial
+        let left = buttonRect.left - menuWidth;
+        let top = buttonRect.bottom + 5;
+        
+        // Verificar se o menu sairia da tela pela esquerda
+        if (left < 10) {
+            left = buttonRect.right + 5;
+        }
+        
+        // Verificar se o menu sairia da tela pela direita
+        if (left + menuWidth > window.innerWidth - 10) {
+            left = window.innerWidth - menuWidth - 10;
+        }
+        
+        // Verificar se o menu sairia da tela por baixo
+        if (top + menuHeight > window.innerHeight - 10) {
+            top = buttonRect.top - menuHeight - 5;
+        }
+        
+        // Verificar se o menu sairia da tela por cima
+        if (top < 10) {
+            top = 10;
+        }
+        
         menu.style.position = 'fixed';
-        menu.style.top = `${buttonRect.bottom + 5}px`;
-        menu.style.left = `${buttonRect.left - 150}px`;
+        menu.style.top = `${top}px`;
+        menu.style.left = `${left}px`;
         menu.style.zIndex = '1000';
 
         // Event listeners para as opções do menu

@@ -195,6 +195,10 @@ body {
     opacity: 1;
 }
 
+.trash-item:hover .page-menu-btn {
+    opacity: 1;
+}
+
 .page-menu-btn:hover {
     background-color: #2a2a2a;
     color: #ffffff;
@@ -552,6 +556,24 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Botão de menu sempre visível na lixeira */
+.trash-item .page-menu-btn {
+    opacity: 1 !important;
+    background: none;
+    border: none;
+    color: #888888;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.trash-item .page-menu-btn:hover {
+    background-color: #2a2a2a;
+    color: #ffffff;
 }
 
 /* Conteúdo principal */
