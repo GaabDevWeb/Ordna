@@ -771,6 +771,113 @@ body {
     list-style-type: decimal;
 }
 
+/* Estilos para citações */
+.editor blockquote {
+    margin: 16px 0;
+    padding: 12px 16px;
+    border-left: 4px solid #4a4a4a;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+    font-style: italic;
+    color: #d0d0d0;
+    line-height: 1.6;
+}
+
+.editor blockquote:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-left-color: #5a5a5a;
+}
+
+/* Estilos para divisores */
+.editor hr {
+    margin: 20px 0;
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #3a3a3a, transparent);
+    opacity: 0.6;
+}
+
+.editor hr:hover {
+    opacity: 1;
+    background: linear-gradient(to right, transparent, #4a4a4a, transparent);
+}
+
+/* Estilos para tabelas */
+.editor table {
+    margin: 16px 0;
+    border-collapse: collapse;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.editor table th {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.editor table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.4;
+}
+
+.editor table tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.editor table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estilos para lista de tarefas (todo list) */
+.editor .todo-list {
+    margin: 16px 0;
+    padding-left: 24px;
+    list-style: none;
+}
+
+.editor .todo-item {
+    margin: 8px 0;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.editor .todo-item:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+
+.editor .todo-item::before {
+    content: '☐';
+    font-size: 16px;
+    color: #888888;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.editor .todo-item.completed::before {
+    content: '☑';
+    color: #4CAF50;
+}
+
+.editor .todo-item.completed {
+    text-decoration: line-through;
+    color: #666666;
+    opacity: 0.7;
+}
+
 .editor:empty:before {
     content: "Comece a escrever...";
     color: #666666;
@@ -914,9 +1021,36 @@ body {
     border-radius: 8px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     z-index: 1000;
-    min-width: 200px;
+    min-width: 320px;
+    max-width: 360px;
+    max-height: 300px;
     display: none;
     animation: contextMenuFadeIn 0.2s ease-out;
+    overflow: hidden;
+}
+
+.context-menu-content {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Scrollbar personalizada para o menu */
+.context-menu-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.context-menu-content::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.context-menu-content::-webkit-scrollbar-thumb {
+    background: #3a3a3a;
+    border-radius: 2px;
+}
+
+.context-menu-content::-webkit-scrollbar-thumb:hover {
+    background: #4a4a4a;
 }
 
 @keyframes contextMenuFadeIn {
@@ -931,7 +1065,7 @@ body {
 }
 
 .context-menu-section {
-    padding: 8px 0;
+    padding: 4px 0;
     border-bottom: 1px solid #2a2a2a;
 }
 
@@ -940,23 +1074,25 @@ body {
 }
 
 .context-menu-title {
-    padding: 8px 16px;
-    font-size: 12px;
+    padding: 6px 12px;
+    font-size: 11px;
     font-weight: 600;
     color: #888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-align: left;
 }
 
 .context-menu-item {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 16px;
+    padding: 8px 12px;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 14px;
+    font-size: 13px;
     color: #e0e0e0;
+    text-align: left;
 }
 
 .context-menu-item:hover {
@@ -967,8 +1103,9 @@ body {
 .context-menu-item i {
     width: 16px;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     color: #888;
+    flex-shrink: 0;
 }
 
 .context-menu-item:hover i {
@@ -977,6 +1114,10 @@ body {
 
 .context-menu-item span {
     flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Editor line hover effect */
